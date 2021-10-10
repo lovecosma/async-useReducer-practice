@@ -1,23 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import { useEffect, useReducer } from "react"
+import postsReducer from "./reducers/postsReducer"
+import { fetchPosts } from "./actions/posts"
 
 function App() {
+
+  const [{posts, requesting}, dispatch] = useReducer(postsReducer, {posts: [], requesting: true})
+
+  useEffect(() => {
+    fetchPosts(dispatch)
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      {requesting ? 
+      <h3>Loading...</h3> :
+      posts.map(post => {
+        return (
+          <div>
+            <h4>{post.title}</h4>
+            <p>{post.content}</p>
+          </div>
+        )
+      })
+      }
     </div>
   );
 }
